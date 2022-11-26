@@ -215,11 +215,14 @@ def main(args, signal:SignalCli):
         signal.stopSignal()
         print("FATAL: Couldn't find command and control group.")
         exit(3)
-    account.messages.sendMessage(recipients=commandGroup, body="Chatbot v%s started." % VERSION)
-
+    response = account.messages.sendMessage(recipients=commandGroup, body="Chatbot v%s started." % VERSION)
+    sentMessage = response[0][2]
+    
+    sentMessage.react('🇨🇦')
     signal.startRecieve(account, receivedMessageCallback=receivedMessageCb)
-    account.messages.sendMessage(recipients=commandGroup, body="Chatbot now accepting commands.")
-
+    response = account.messages.sendMessage(recipients=commandGroup, body="Chatbot now accepting commands.")
+    sentMessage = response[0][2]
+    sentMessage.react('🤖')
 
     try:
         while (QUIT == False):
