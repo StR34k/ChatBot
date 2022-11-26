@@ -79,6 +79,35 @@ def sendMessage(account:Account, commandGroup:Group, contactId:int, message:str,
     account.messages.sendMessage(recipients=commandGroup, body="Message sent.")
     return
 
+def sendHelpMessage(account:Account, commandGroup:Group, param:str) -> None:
+    if (param.lower() == "none" or param.lower() == 'help'):
+        helpBody = "Help:\n"
+        helpBody = helpBody + "Methods: listContacts, contactDetail, send, help\n"
+        helpBody = helpBody + "Note: all method names are case insensitive."
+        helpBody = helpBody + "Enter key 'param':'methodName' for detailed help."
+        account.message.sendMessage(recipients=commandGroup, body=helpBody)
+    elif (param.lower() == 'listcontacts'):
+        helpBody = "Help listContacts:\n"
+        helpBody = helpBody + "List all contacts."
+        helpBody = helpBody + "Params: None."
+    elif (param.lower() == 'contactdetail'):
+        helpBody = "Help contactDetail:\n"
+        helpBody = helpBody + "Display details of a contact."
+        helpBody = helpBody + "Params: contactid(int), Required, Contact id given by listContacts"
+    elif (param.lower() == 'send'):
+        helpBody = "Help send:\n"
+        helpBody = helpBody + "Send a message to a contact.\n"
+        helpBody = helpBody + "Params: contactid(int), required, contact id given by listcontacts.\n"
+        helpBody = helpBody + "        message(str), required, message body to send.\n"
+        helpBody = helpBody + "        attachment(str), optional, path to a file on the chatbot server.\n"
+    else:
+        helpBody = "Help: Invalid parameter: %s" % param
+    
+    account.messages.sendMessage(recipients=commandGroup, body=helpBody)
+
+
+    return
+
 def receivedMessageCb(account:Account, message:ReceivedMessage) -> None:
     print("Message received.")
     print("Marking read.")
@@ -187,6 +216,12 @@ def receivedMessageCb(account:Account, message:ReceivedMessage) -> None:
         else:
             attachment = None
         sendMessage(account, commandGroup, commandMsg['contactid'], commandMsg['message'], attachment)
+# Display Help:
+    elif ('help' in commandMsg.keys()):
+        if ('param' in commandMsg.keys()):
+            sendHelpMessage(account, commandGroup, commandMsg['param'])
+        else:
+            sendHelpMessage(account, commandGroup, "None")
     else:
         message.react(THUMBS_DOWN)
         quote = message.quote()
