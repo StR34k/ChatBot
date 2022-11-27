@@ -83,7 +83,7 @@ def sendHelpMessage(account:Account, commandGroup:Group, param:str) -> None:
     if (param.lower() == "none" or param.lower() == 'help'):
         helpBody = "Help:\n"
         helpBody = helpBody + "Methods: listContacts, contactDetail, send, help\n"
-        helpBody = helpBody + "Note: all method names are case insensitive."
+        helpBody = helpBody + "Note: all method names are case insensitive. and white space is stripped.\n"
         helpBody = helpBody + "Enter key 'param':'methodName' for detailed help."
         account.message.sendMessage(recipients=commandGroup, body=helpBody)
     elif (param.lower() == 'listcontacts'):
